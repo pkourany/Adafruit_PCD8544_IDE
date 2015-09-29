@@ -19,9 +19,15 @@ Adapted for Spark Core by Paul Kourany, April 2014
 *********************************************************************/
 
 
-#include "../Adafruit_GFX/Adafruit_GFX.h"
+#include "Adafruit_GFX/Adafruit_GFX.h"
 #include "Adafruit_PCD8544.h"
 
+#if !defined(PLATFORM_ID)		// Core v0.3.4
+#warning "CORE"
+  #define pinSetFast(_pin)		PIN_MAP[_pin].gpio_peripheral->BSRR = PIN_MAP[_pin].gpio_pin
+  #define pinResetFast(_pin)	PIN_MAP[_pin].gpio_peripheral->BRR = PIN_MAP[_pin].gpio_pin
+  #define pgm_read_byte(addr) (*(const uint8_t *)(addr))
+#endif
 
 // the memory buffer for the LCD
 uint8_t pcd8544_buffer[LCDWIDTH * LCDHEIGHT / 8] = {
@@ -210,14 +216,18 @@ inline void Adafruit_PCD8544::fastSPIwrite(uint8_t d) {
   }
   
   for (uint8_t bit = 0; bit < 8; bit++)  {
-	PIN_MAP[_sclk].gpio_peripheral->BRR = PIN_MAP[_sclk].gpio_pin; // Clock Low
+	//PIN_MAP[_sclk].gpio_peripheral->BRR = PIN_MAP[_sclk].gpio_pin; // Clock Low
+	pinResetFast(_sclk);
 
 	if (d & (1 << (7-bit)))		// walks down mask from bit 7 to bit 0
-		PIN_MAP[_din].gpio_peripheral->BSRR = PIN_MAP[_din].gpio_pin; // Data High
+		//PIN_MAP[_din].gpio_peripheral->BSRR = PIN_MAP[_din].gpio_pin; // Data High
+		pinSetFast(_din);
 	else
-		PIN_MAP[_din].gpio_peripheral->BRR = PIN_MAP[_din].gpio_pin; // Data Low
+		//PIN_MAP[_din].gpio_peripheral->BRR = PIN_MAP[_din].gpio_pin; // Data Low
+		pinResetFast(_din);
 			
-	PIN_MAP[_sclk].gpio_peripheral->BSRR = PIN_MAP[_sclk].gpio_pin; // Clock High
+	//PIN_MAP[_sclk].gpio_peripheral->BSRR = PIN_MAP[_sclk].gpio_pin; // Clock High
+	pinSetFast(_sclk);
 	}
 
 }
@@ -232,27 +242,27 @@ inline void Adafruit_PCD8544::slowSPIwrite(uint8_t c) {
 
 
 void Adafruit_PCD8544::command(uint8_t c) {
-  PIN_MAP[_dc].gpio_peripheral->BRR = PIN_MAP[_dc].gpio_pin;  //DC LOW
-  //digitalWrite(_dc, LOW);
+  //PIN_MAP[_dc].gpio_peripheral->BRR = PIN_MAP[_dc].gpio_pin;  //DC LOW
+  pinResetFast(_dc);
   if (_cs > 0)
-    PIN_MAP[_cs].gpio_peripheral->BRR = PIN_MAP[_cs].gpio_pin;  //CS LOW
-    //digitalWrite(_cs, LOW);
+    //PIN_MAP[_cs].gpio_peripheral->BRR = PIN_MAP[_cs].gpio_pin;  //CS LOW
+	pinResetFast(_cs);
   fastSPIwrite(c);
   if (_cs > 0)
-    PIN_MAP[_cs].gpio_peripheral->BSRR = PIN_MAP[_cs].gpio_pin;  //CS HIGH
-    //digitalWrite(_cs, HIGH);
+    //PIN_MAP[_cs].gpio_peripheral->BSRR = PIN_MAP[_cs].gpio_pin;  //CS HIGH
+    pinSetFast(_cs);
 }
 
 void Adafruit_PCD8544::data(uint8_t c) {
-  PIN_MAP[_dc].gpio_peripheral->BSRR = PIN_MAP[_dc].gpio_pin;  //DC HIGH
-  //digitalWrite(_dc, HIGH);
+  //PIN_MAP[_dc].gpio_peripheral->BSRR = PIN_MAP[_dc].gpio_pin;  //DC HIGH
+  pinSetFast(_dc);
   if (_cs > 0)
-    PIN_MAP[_cs].gpio_peripheral->BRR = PIN_MAP[_cs].gpio_pin;  //CS LOW
-    //digitalWrite(_cs, LOW);
+    //PIN_MAP[_cs].gpio_peripheral->BRR = PIN_MAP[_cs].gpio_pin;  //CS LOW
+	pinResetFast(_cs);
   fastSPIwrite(c);
   if (_cs > 0)
-    PIN_MAP[_cs].gpio_peripheral->BSRR = PIN_MAP[_cs].gpio_pin;  //CS HIGH
-    //digitalWrite(_cs, HIGH);
+    //PIN_MAP[_cs].gpio_peripheral->BSRR = PIN_MAP[_cs].gpio_pin;  //CS HIGH
+	pinSetFast(_cs);
 }
 
 void Adafruit_PCD8544::setContrast(uint8_t val) {
@@ -297,16 +307,16 @@ void Adafruit_PCD8544::display(void) {
 
     digitalWrite(_dc, HIGH);
     if (_cs > 0)
-      PIN_MAP[_cs].gpio_peripheral->BRR = PIN_MAP[_cs].gpio_pin;  //CS LOW
-      //digitalWrite(_cs, LOW);
+      //PIN_MAP[_cs].gpio_peripheral->BRR = PIN_MAP[_cs].gpio_pin;  //CS LOW
+      pinResetFast(_cs);
     for(; col <= maxcol; col++) {
       //uart_putw_dec(col);
       //uart_putchar(' ');
       fastSPIwrite(pcd8544_buffer[(LCDWIDTH*p)+col]);
     }
     if (_cs > 0)
-      PIN_MAP[_cs].gpio_peripheral->BSRR = PIN_MAP[_cs].gpio_pin;  //CS HIGH
-      //digitalWrite(_cs, HIGH);
+      //PIN_MAP[_cs].gpio_peripheral->BSRR = PIN_MAP[_cs].gpio_pin;  //CS HIGH
+      pinSetFast(_cs);
 
   }
 
