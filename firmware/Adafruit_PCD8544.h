@@ -69,8 +69,8 @@ class Adafruit_PCD8544 : public Adafruit_GFX {
 
  private:
   int8_t _din, _sclk, _dc, _rst, _cs;
-  volatile uint8_t *mosiport, *clkport, *csport, *dcport;
-  uint8_t mosipinmask, clkpinmask, cspinmask, dcpinmask;
+  //volatile uint8_t *mosiport, *clkport, *csport, *dcport;
+  //uint8_t mosipinmask, clkpinmask, cspinmask, dcpinmask;
 
   bool hwSPI;
   
