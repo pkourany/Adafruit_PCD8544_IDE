@@ -1,9 +1,11 @@
-Adafruit-PCD8544-Nokia-5110-LCD-library-for-Spark
+Adafruit-PCD8544-Nokia-5110-LCD-library
 =================================================
 
 Nokia 5110 LCD library adapted for Spark Core by Paul Kourany, April 2014
 
-This code compiles on the Spark web IDE
+!!! Updated for new Core and Photon firmware (0.4.5), Sept 2015
+
+This code compiles on the Particle web IDE
 
 Requirement
 -----------
@@ -43,7 +45,7 @@ be specifiec and connected to the display and the constructor called as follows:
 ```  
   
 NOTES:
-- Modified code for Spark Core compatibility
+- Modified code for Particle Core and Photon compatibility
 - Added hardware and (fast) software SPI to fastSPIwrite()
 - Added new create object methods for HardwareSPI:
 
