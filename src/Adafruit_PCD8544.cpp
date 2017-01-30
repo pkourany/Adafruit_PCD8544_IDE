@@ -19,7 +19,7 @@ Adapted for Spark Core by Paul Kourany, April 2014
 *********************************************************************/
 
 
-#include "Adafruit_GFX/Adafruit_GFX.h"
+#include "Adafruit_GFX.h"
 #include "Adafruit_PCD8544.h"
 
 #if !defined(PLATFORM_ID)		// Core v0.3.4

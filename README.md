@@ -4,6 +4,7 @@ Adafruit-PCD8544-Nokia-5110-LCD-library
 Nokia 5110 LCD library adapted for Spark Core by Paul Kourany, April 2014
 
 !!! Updated for new Core and Photon firmware (0.4.5), Sept 2015
+!!! Updated to Libraries 2.0, Jan 2017
 
 This code compiles on the Particle web IDE
 

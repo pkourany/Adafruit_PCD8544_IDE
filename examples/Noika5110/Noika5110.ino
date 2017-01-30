@@ -18,8 +18,8 @@ All text above, and the splash screen must be included in any redistribution
 Adapted for Spark Core by Paul Kourany, April 2014
 *********************************************************************/
 
-#include "Adafruit_GFX/Adafruit_GFX.h"
-#include "Adafruit_PCD8544/Adafruit_PCD8544.h"
+#include "Adafruit_GFX.h"
+#include "Adafruit_PCD8544.h"
 
 // (FAST) SOFTWARE SPI
 // pin A3 - Serial clock out (SCLK) - User defined
